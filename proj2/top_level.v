@@ -2,19 +2,25 @@ module top_level
 	(
 	input clk,
 	input reset,
-	output [1:0] out
+	input s_data,
+	output done,
+	output [7:0] d_out
 	);
 
-clk_div #(.CNT(33554432)) div1
+wire clk_w;
+
+clk_div #(.CNT(16)) div1
 	(.clk(clk),
 	 .rst(reset),
-	 .out(out[0])
+	 .out(clk_w)
 );
 
-//clk_div #(.CNT(33554432*2)) div2
-//	(.clk(clk),
-//	 .rst(reset),
-//	 .out(out[1])
-//);
+uart_rx uart1 (
+	.clk_br(clk_w),
+	.serial_data(s_data),
+	.rx_done(done),
+	.out(d_out)
+);
+
 
 endmodule
